@@ -1,0 +1,99 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type RoleToUserEntity {
+  """Example field (placeholder)"""
+  id: ID!
+  roleName: RoleEnum!
+}
+
+enum RoleEnum {
+  User
+  Admin
+}
+
+type UserModuleEntity {
+  """unique module Id"""
+  id: ID!
+  moduleName: String!
+  roles: [RoleEnum]
+  authorizedUsers: [UserEntity]
+}
+
+type UserEntity {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  roleId: String
+  role: RoleToUserEntity
+  userModules: [UserModuleEntity]!
+}
+
+type GraphQLResponse implements GrapQLCustomResponse {
+  status: Int!
+  message: String
+  result: RegistryUnionTypes
+  results: [RegistryUnionTypes]
+}
+
+interface GrapQLCustomResponse {
+  status: Int!
+  message: String
+}
+
+union RegistryUnionTypes = AuthEntity | UserEntity | UserModuleEntity
+
+type AuthEntity {
+  access_token: String!
+  user: UserEntity!
+}
+
+type Query {
+  me: GraphQLResponse!
+  users: [UserEntity!]!
+  userModules: [UserModuleEntity!]!
+  userModule(id: Int!): UserModuleEntity!
+  getResponseDemo: [GraphQLResponse!]!
+}
+
+type Mutation {
+  updateUser(updateUserInput: UpdateUserInput!): GraphQLResponse!
+  removeUser(id: ID!): GraphQLResponse!
+  deleteMyAccount: GraphQLResponse!
+  userRegister(registerInput: RegisterInput!): GraphQLResponse!
+  login(loginInput: LoginInput!): GraphQLResponse!
+  createUserModule(createUserModuleInput: CreateUserModuleInput!): GraphQLResponse!
+  updateUserModule(updateUserModuleInput: UpdateUserModuleInput!): UserModuleEntity!
+  removeUserModule(id: Int!): UserModuleEntity!
+}
+
+input UpdateUserInput {
+  name: String
+  email: String
+  password: String
+}
+
+input RegisterInput {
+  name: String!
+  email: String!
+  password: String!
+}
+
+input LoginInput {
+  email: String!
+  password: String!
+  id: ID
+}
+
+input CreateUserModuleInput {
+  name: String!
+  roles: [RoleEnum!]!
+}
+
+input UpdateUserModuleInput {
+  name: String
+  roles: [RoleEnum!]
+  id: ID!
+}
